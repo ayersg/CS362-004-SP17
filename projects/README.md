@@ -1,1 +1,1 @@
-The projects directory should contain your onid folder 
+Assignment 2
