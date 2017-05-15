@@ -1,4 +1,4 @@
-CFLAGS = -Wall -fpic -coverage -lm -ftest-coverage -fprofile-arcs
+CFLAGS = -std=c99 -Wall -fpic -coverage -lm -ftest-coverage -fprofile-arcs
 
 rngs.o: rngs.h rngs.c
 	gcc -c rngs.c -g  $(CFLAGS)
@@ -95,6 +95,33 @@ unittestresults.out: cardtest1.c cardtest2.c cardtest3.c cardtest4.c unittest2.c
 	gcc -o unittest4 unittest4.c -g dominion.c rngs.o interface.o $(CFLAGS)
 	./unittest4 >> unittestresults.out
 	gcov -b dominion.c >> unittestresults.out
+
+randomtestresults.out: randomtestadventurer.c randomtestcard1.c randomtestcard2.c dominion.c rngs.o interface.o
+	echo “Results for random tests:” > randomtestresults.out
+
+	echo “randomtestcard1.c” >> randomtestresults.out
+	gcc -o randomtestcard1 randomtestcard1.c -g dominion.c rngs.o interface.o $(CFLAGS)
+	./randomtestcard1 42 1 >> randomtestresults.out
+	gcov -b dominion.c >> randomtestresults.out
+
+	echo “randomtestcard2.c” >> randomtestresults.out
+	gcc -o randomtestcard2 randomtestcard2.c -g dominion.c rngs.o interface.o $(CFLAGS)
+	./randomtestcard2 42 1 >> randomtestresults.out
+	gcov -b dominion.c >> randomtestresults.out
+
+	echo “randomtestadventurer.c” >> randomtestresults.out
+	gcc -o randomtestadventurer randomtestadventurer.c -g dominion.c rngs.o interface.o $(CFLAGS)
+	./randomtestadventurer 42 1 >> randomtestresults.out
+	gcov -b dominion.c >> randomtestresults.out
+
+randomtestadventurer: randomtestadventurer.c dominion.o rngs.o
+	gcc -o randomtestadventurer -g  randomtestadventurer.c dominion.o rngs.o $(CFLAGS)
+
+randomtestcard1: randomtestcard1.c dominion.o rngs.o
+	gcc -o randomtestcard1 -g  randomtestcard1.c dominion.o rngs.o $(CFLAGS)
+
+randomtestcard2: randomtestcard2.c dominion.o rngs.o
+	gcc -o randomtestcard2 -g  randomtestcard2.c dominion.o rngs.o $(CFLAGS)
 
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
